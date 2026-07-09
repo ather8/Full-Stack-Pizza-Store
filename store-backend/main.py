@@ -54,7 +54,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
-        "https://pizza-store-frontend-iota.vercel.app/"
+        "https://pizza-store-frontend-ruby.vercel.app/"
     ],
     allow_credentials=True,
     allow_methods=["*"],
