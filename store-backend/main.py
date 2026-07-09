@@ -128,7 +128,7 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
     return user
 
 
-@app.post("/login/")
+@app.post("/login")
 def login(credentials: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     db_user = db.query(model.User).filter(model.User.email == credentials.username).first()
     if not db_user:
@@ -283,7 +283,7 @@ def get_forecast(product_id: int, db: Session = Depends(get_db), current_user = 
 class NLQuery(BaseModel):
     question: str
 
-@app.post("/query/")
+@app.post("/query")
 def natural_language_query(
     body: NLQuery,
     db=Depends(get_llm_db),
@@ -300,7 +300,7 @@ def natural_language_query(
     return {"answer": answer}
 
 
-@app.get("/me/", response_model=schema.User)
+@app.get("/me", response_model=schema.User)
 def get_current_user_profile(current_user = Depends(get_current_user), db: Session = Depends(get_db)):
     db_user = db.query(model.User).filter(model.User.email == current_user).first()
     if not db_user:
