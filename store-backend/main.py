@@ -54,12 +54,13 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
-        "https://pizza-store-frontend-ruby.vercel.app/"
+        "https://pizza-store-frontend-ruby.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # Dependency to get DB session
 def get_db():
