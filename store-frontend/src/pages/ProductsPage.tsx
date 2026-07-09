@@ -21,11 +21,6 @@ export default function ProductsPage() {
         ), [products, search]
     )
 
-    const categories = useMemo(() =>
-        [...new Set(products.map(p => p.category).filter(Boolean))],
-        [products]
-    )
-
     const categoryColors: Record<string, string> = {
         'Pizza': 'bg-orange-100 text-orange-700',
         'Pasta': 'bg-blue-100 text-blue-700',
