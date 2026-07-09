@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from 'react'
 import { Send, Sparkles } from 'lucide-react'
-import { askQuestion } from '../api/query'
+import { askQuestion, ApiError } from '../api/query'
 
 interface Message {
     role: 'assistant' | 'user'
     content: string
+    isError?: boolean
 }
 
 const SUGGESTED = [
@@ -13,6 +14,30 @@ const SUGGESTED = [
     "Which cashier has the most sales?",
     "Show me the most popular items",
 ]
+
+function getErrorMessage(err: unknown): string {
+    if (err instanceof ApiError) {
+        switch (err.status) {
+            case 429:
+                return err.detail ||
+                    "The AI assistant is getting a lot of questions right now and has hit its usage limit. Please try again in a little while."
+            case 503:
+                return err.detail ||
+                    "The AI assistant is temporarily unavailable. Please try again shortly."
+            case 401:
+            case 403:
+                return "Your session has expired or you don't have permission to use the AI assistant. Please log in again."
+            default:
+                if (err.status >= 500) {
+                    return "Something went wrong on our end while processing that question. Please try again."
+                }
+                return err.detail || "Sorry, I couldn't process that request. Please try again."
+        }
+    }
+
+    // Network failure, CORS error, etc. — fetch itself threw before we got a response
+    return "Couldn't reach the server. Please check your connection and try again."
+}
 
 export default function QueryPage() {
     const [messages, setMessages] = useState<Message[]>([
@@ -40,10 +65,11 @@ export default function QueryPage() {
         try {
             const answer = await askQuestion(question)
             setMessages(prev => [...prev, { role: 'assistant', content: answer }])
-        } catch {
+        } catch (err) {
             setMessages(prev => [...prev, {
                 role: 'assistant',
-                content: "Sorry, I couldn't process that request. Please try again."
+                content: getErrorMessage(err),
+                isError: true
             }])
         } finally {
             setLoading(false)
@@ -63,14 +89,18 @@ export default function QueryPage() {
                 {messages.map((msg, i) => (
                     <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                         {msg.role === 'assistant' && (
-                            <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0 mt-1">
-                                <Sparkles size={14} className="text-orange-500" />
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 flex-shrink-0 mt-1 ${
+                                msg.isError ? 'bg-red-100' : 'bg-orange-100'
+                            }`}>
+                                <Sparkles size={14} className={msg.isError ? 'text-red-400' : 'text-orange-500'} />
                             </div>
                         )}
                         <div className={`max-w-xl px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-line ${
                             msg.role === 'user'
                                 ? 'bg-orange-500 text-white rounded-tr-sm'
-                                : 'bg-white text-gray-700 shadow-sm rounded-tl-sm'
+                                : msg.isError
+                                    ? 'bg-red-50 text-red-700 border border-red-100 shadow-sm rounded-tl-sm'
+                                    : 'bg-white text-gray-700 shadow-sm rounded-tl-sm'
                         }`}>
                             {msg.content}
                         </div>
