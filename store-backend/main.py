@@ -11,7 +11,10 @@ from ml.predict import forecast
 from schema import Roles
 from database import SessionLocal, engine, Base, LLMSessionLocal
 from auth import hash_password, verify_password, create_access_token, get_current_user, require_role
-from ml.llm_query import classify_intent, execute_template, format_response, OUT_OF_SCOPE_MESSAGE
+from ml.llm_query import (
+    classify_intent, execute_template, format_response,
+    OUT_OF_SCOPE_MESSAGE, LLMQuotaExceededError, LLMUnavailableError
+)
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -290,14 +293,19 @@ def natural_language_query(
     db=Depends(get_llm_db),
     current_user=Depends(require_role(Roles.ADMIN, Roles.MANAGER))
 ):
-    intent = classify_intent(body.question)
-    
+    try:
+        intent = classify_intent(body.question)
+    except LLMQuotaExceededError as e:
+        raise HTTPException(status_code=429, detail=str(e))
+    except LLMUnavailableError as e:
+        raise HTTPException(status_code=503, detail=str(e))
+
     if intent is None:
         return {"answer": OUT_OF_SCOPE_MESSAGE}
-    
+
     rows = execute_template(intent, db)
     answer = format_response(intent, rows)
-    
+
     return {"answer": answer}
 
 

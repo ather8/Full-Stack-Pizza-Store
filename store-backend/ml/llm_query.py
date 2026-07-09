@@ -1,9 +1,13 @@
 import os
+import logging
 from google import genai
+from google.genai.errors import APIError
 from sqlalchemy import text
 from dotenv import load_dotenv
 
 load_dotenv()
+
+logger = logging.getLogger("uvicorn.error")
 
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
@@ -95,6 +99,16 @@ TEMPLATES = {
 }
 
 
+class LLMQuotaExceededError(Exception):
+    """Raised when the Gemini API quota/rate limit has been exhausted."""
+    pass
+
+
+class LLMUnavailableError(Exception):
+    """Raised for other non-quota Gemini API failures (auth, server errors, etc.)."""
+    pass
+
+
 def classify_intent(question: str) -> str | None:
     # Build a prompt that shows Gemini the templates and asks it to pick one
     template_descriptions = "\n".join([
@@ -112,15 +126,27 @@ Reply with ONLY the template key that best matches the question.
 If none match, reply with: none
 Do not explain, do not add punctuation. Just the key."""
 
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=prompt
-    )
+    try:
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt
+        )
+    except APIError as e:
+        if e.code == 429:
+            logger.warning(f"Gemini quota/rate limit exceeded: {e}")
+            raise LLMQuotaExceededError(
+                "The AI query service has hit its usage quota. Please try again later."
+            ) from e
+        logger.error(f"Gemini API error ({e.code}): {e}")
+        raise LLMUnavailableError(
+            "The AI query service is temporarily unavailable. Please try again shortly."
+        ) from e
+
     intent = response.text.strip().lower()
-    
+
     if intent not in TEMPLATES:
         return None
-    
+
     return intent
 
 
