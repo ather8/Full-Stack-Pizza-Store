@@ -20,6 +20,7 @@ export default function Layout() {
                     >
                         <Menu size={22} />
                     </button>
+                    <img src="/logo.svg" alt="PizzaStore" className="w-6 h-6 rounded-md" />
                     <span className="text-white font-semibold text-sm">PizzaStore</span>
                 </div>
 

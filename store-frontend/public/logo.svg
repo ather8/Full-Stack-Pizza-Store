@@ -1,0 +1,45 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="crust" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8A33D"/>
+      <stop offset="100%" stop-color="#C97C1F"/>
+    </linearGradient>
+    <linearGradient id="cheese" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFC94A"/>
+      <stop offset="100%" stop-color="#FCA935"/>
+    </linearGradient>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D64545"/>
+      <stop offset="100%" stop-color="#B93232"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+
+  <!-- Pizza slice group, centered -->
+  <g transform="translate(256,268)">
+    <!-- Crust outer arc -->
+    <path d="M 0,-172 A 172,172 0 0 1 149,86 L 0,0 Z" fill="url(#crust)"/>
+    <!-- Cheese layer, inset -->
+    <path d="M 0,-150 A 150,150 0 0 1 130,75 L 0,0 Z" fill="url(#cheese)"/>
+    <!-- Crust rim highlight -->
+    <path d="M 0,-172 A 172,172 0 0 1 149,86 L 130,75 A 150,150 0 0 0 0,-150 Z" fill="#F2B85C" opacity="0.55"/>
+
+    <!-- Pepperoni -->
+    <circle cx="-18" cy="-95" r="19" fill="#B5342A"/>
+    <circle cx="55" cy="-60" r="19" fill="#B5342A"/>
+    <circle cx="15" cy="-30" r="19" fill="#B5342A"/>
+    <circle cx="80" cy="10" r="19" fill="#B5342A"/>
+    <circle cx="30" cy="35" r="19" fill="#B5342A"/>
+
+    <!-- Basil flecks -->
+    <ellipse cx="-2" cy="-60" rx="7" ry="4" fill="#4C7A3D" transform="rotate(20 -2 -60)"/>
+    <ellipse cx="60" cy="-15" rx="7" ry="4" fill="#4C7A3D" transform="rotate(-15 60 -15)"/>
+    <ellipse cx="95" cy="55" rx="7" ry="4" fill="#4C7A3D" transform="rotate(35 95 55)"/>
+    <ellipse cx="-30" cy="-30" rx="6" ry="3.5" fill="#5B8A49" transform="rotate(-25 -30 -30)"/>
+  </g>
+
+  <!-- Store awning arc under the slice -->
+  <path d="M 146,398 Q 256,438 366,398" stroke="#FFF6E5" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.9"/>
+</svg>

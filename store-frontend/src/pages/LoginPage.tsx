@@ -32,9 +32,7 @@ export default function LoginPage() {
             <div className="w-full max-w-sm">
                 {/* Logo */}
                 <div className="flex items-center justify-center gap-3 mb-8">
-                    <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center">
-                        <span className="text-white font-bold text-lg">P</span>
-                    </div>
+                    <img src="/logo.svg" alt="PizzaStore" className="w-10 h-10 rounded-xl" />
                     <div>
                         <p className="text-white font-bold text-lg leading-none">PizzaStore</p>
                         <p className="text-gray-400 text-xs">Operations System</p>

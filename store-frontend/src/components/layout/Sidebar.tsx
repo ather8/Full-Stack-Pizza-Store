@@ -61,9 +61,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         {/* Logo */}
         <div className="p-4 border-b border-gray-700 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
-              <span className="text-white text-sm font-bold">P</span>
-            </div>
+            <img src="/logo.svg" alt="PizzaStore" className="w-8 h-8 rounded-lg" />
             <div>
               <p className="text-white font-bold text-sm">PizzaStore</p>
               <p className="text-gray-400 text-xs">Operations System</p>
