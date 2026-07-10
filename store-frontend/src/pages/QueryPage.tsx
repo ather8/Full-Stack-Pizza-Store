@@ -79,13 +79,13 @@ export default function QueryPage() {
     return (
         <div className="flex flex-col h-full">
             {/* Header */}
-            <div className="p-8 pb-4">
+            <div className="p-4 md:p-8 pb-4">
                 <h1 className="text-2xl font-bold text-gray-800">AI Assistant</h1>
                 <p className="text-gray-500 text-sm mt-1">Ask questions about your restaurant's data in plain English</p>
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto px-8 pb-4 space-y-4">
+            <div className="flex-1 overflow-y-auto px-4 md:px-8 pb-4 space-y-4">
                 {messages.map((msg, i) => (
                     <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                         {msg.role === 'assistant' && (
@@ -125,7 +125,7 @@ export default function QueryPage() {
             </div>
 
             {/* Suggested prompts */}
-            <div className="px-8 pb-3 flex gap-2 flex-wrap">
+            <div className="px-4 md:px-8 pb-3 flex gap-2 flex-wrap">
                 {SUGGESTED.map((s, i) => (
                     <button
                         key={i}
@@ -139,7 +139,7 @@ export default function QueryPage() {
             </div>
 
             {/* Input */}
-            <div className="px-8 pb-8">
+            <div className="px-4 md:px-8 pb-4 md:pb-8">
                 <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-2xl px-4 py-3 focus-within:ring-2 focus-within:ring-orange-500 focus-within:border-transparent">
                     <input
                         type="text"

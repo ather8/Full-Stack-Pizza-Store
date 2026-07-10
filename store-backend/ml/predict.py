@@ -45,7 +45,12 @@ def forecast(product_name: str, last_14_days: list[float]) -> list[dict] | None:
         lag_14 = history[-14]
         day_of_week = pred_date.weekday()
         month = pred_date.month
-        is_weekend = 1 if day_of_week >= 4 else 0
+        # Weekend = Saturday/Sunday (day_of_week 5,6) — must match the
+        # definition used in prepare_data.py's rebuild_processed_dataset,
+        # since that's what the weekly retrain trains on. If these two
+        # disagree, the model learns one definition of "weekend" and gets
+        # fed a different one at prediction time.
+        is_weekend = 1 if day_of_week >= 5 else 0
         season = get_season(month)
         rolling_mean_7 = np.mean(history[-7:])
 

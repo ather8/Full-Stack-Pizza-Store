@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Search, Plus, Minus, Trash2, ShoppingCart } from 'lucide-react'
 import type { Product } from '../types'
 import { getProducts } from '../api/products'
-import { createTransaction } from '../api/transactions'
+import { createTransactionsBulk } from '../api/transactions'
 
 interface CartItem {
     product: Product
@@ -75,11 +75,12 @@ export default function OrderPage() {
         setSubmitting(true)
         setError('')
         try {
-            // Backend only supports one product per transaction,
-            // so each cart line item becomes its own POST request.
-            for (const item of cart) {
-                await createTransaction(item.product.id, item.quantity)
-            }
+            // One atomic request for the whole cart — either it all commits
+            // or none of it does, so a failure never leaves partial sales
+            // recorded while the cart still shows those items as unpaid.
+            await createTransactionsBulk(
+                cart.map(item => ({ product_id: item.product.id, quantity: item.quantity }))
+            )
             setCart([])
             navigate('/transactions')
         } catch (err: unknown) {
@@ -90,9 +91,9 @@ export default function OrderPage() {
     }
 
     return (
-        <div className="flex h-full">
+        <div className="flex flex-col md:flex-row md:h-full">
             {/* Left — product picker */}
-            <div className="flex-1 p-8 overflow-y-auto">
+            <div className="flex-1 p-4 md:p-8 md:overflow-y-auto">
                 <h1 className="text-2xl font-bold text-gray-800">New Order</h1>
                 <p className="text-gray-500 text-sm mt-1 mb-6">Select items to add to the cart</p>
 
@@ -126,7 +127,7 @@ export default function OrderPage() {
                 </div>
 
                 {/* Product grid */}
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                     {filtered.map(product => (
                         <button
                             key={product.id}
@@ -155,7 +156,7 @@ export default function OrderPage() {
             </div>
 
             {/* Right — cart panel */}
-            <div className="w-96 flex-shrink-0 bg-white border-l border-gray-100 p-6 flex flex-col">
+            <div className="w-full md:w-96 md:flex-shrink-0 bg-white border-t md:border-t-0 md:border-l border-gray-100 p-4 md:p-6 flex flex-col md:overflow-y-auto">
                 <div className="flex items-center gap-2 mb-6">
                     <ShoppingCart size={18} className="text-gray-700" />
                     <h2 className="font-semibold text-gray-800">Current Order</h2>

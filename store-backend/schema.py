@@ -65,6 +65,10 @@ class TransactionCreate(BaseModel):
     quantity: int = Field(gt=0, description="Must be at least 1")
 
 
+class TransactionBulkCreate(BaseModel):
+    items: list[TransactionCreate] = Field(min_length=1, description="One or more cart lines to commit atomically")
+
+
 class Transaction(BaseModel):
     id: int
     product_id: Optional[int]

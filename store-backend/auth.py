@@ -4,20 +4,12 @@ from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from jose import jwt, JWTError
 from datetime import datetime, timedelta
-from database import SessionLocal
+from database import get_db
 from schema import Roles
 import model
 import os
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 def hash_password(password: str) -> str:
@@ -77,3 +69,43 @@ def require_role(*allowed_roles: Roles):
         # return user if yes
         return db_user
     return checker
+
+
+# Optional scheme — does NOT auto-raise 401 if no token is provided.
+# Needed so the bootstrap case (zero users in the DB) can be evaluated
+# before deciding whether a token is actually required.
+oauth2_scheme_optional = OAuth2PasswordBearer(tokenUrl="login", auto_error=False)
+
+
+def get_admin_or_allow_bootstrap(
+    token: str | None = Depends(oauth2_scheme_optional),
+    db: Session = Depends(get_db),
+):
+    """
+    Guards user creation.
+
+    - If no users exist yet in the database, allow the request through with
+      no token — this is the one-time bootstrap that creates the first admin.
+    - If users already exist, a valid Admin token is required, same as any
+      other admin-only action.
+
+    Returns the acting admin's User row, or None if this is the bootstrap case.
+    """
+    user_count = db.query(model.User).count()
+
+    if user_count == 0:
+        return None
+
+    if token is None:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    payload = decode_access_token(token)
+    if payload is None:
+        raise HTTPException(status_code=401, detail="Could not validate credentials")
+
+    email = payload.get("sub")
+    db_user = db.query(model.User).filter(model.User.email == email).first()
+    if not db_user or db_user.role != Roles.ADMIN:
+        raise HTTPException(status_code=403, detail="Only admins can create users")
+
+    return db_user

@@ -10,7 +10,7 @@ interface AuthState {
 interface AuthContextType {
     auth: AuthState
     authLoading: boolean  // add this
-    login: (token: string) => Promise<void>
+    login: (token: string) => Promise<string>
     logout: () => void
 }
 
@@ -45,7 +45,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     }, [])
 
-    const login = async (token: string) => {
+    const login = async (token: string): Promise<string> => {
         localStorage.setItem('token', token)
 
         const response = await fetch(`${BASE_URL}/me`, {
@@ -58,6 +58,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             email: user.email,
             role: user.role,
         })
+
+        return user.role
     }
 
     const logout = () => {

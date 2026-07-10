@@ -57,15 +57,15 @@ export default function DashboardPage() {
         })
     }, [transactions])
 
-    if (loading) return <div className="p-8 text-gray-500">Loading...</div>
+    if (loading) return <div className="p-4 md:p-8 text-gray-500">Loading...</div>
 
     return (
-        <div className="p-8">
+        <div className="p-4 md:p-8">
             <h1 className="text-2xl font-bold text-gray-800">Overview</h1>
             <p className="text-gray-500 text-sm mt-1 mb-6">Here's what's happening at your restaurant today.</p>
 
             {/* KPI Cards */}
-            <div className="grid grid-cols-4 gap-4 mb-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">
                 <KpiCard
                     label="Today's Revenue"
                     value={`$${todayRevenue.toFixed(2)}`}
@@ -94,8 +94,8 @@ export default function DashboardPage() {
             </div>
 
             {/* Chart + System Status */}
-            <div className="grid grid-cols-3 gap-4">
-                <div className="col-span-2 bg-white rounded-2xl p-6 shadow-sm">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm">
                     <h2 className="font-semibold text-gray-800 mb-1">Revenue Trend</h2>
                     <p className="text-gray-400 text-xs mb-4">Last 7 days performance</p>
                     <ResponsiveContainer width="100%" height={220}>

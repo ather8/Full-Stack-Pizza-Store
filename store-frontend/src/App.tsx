@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
 import Layout from './components/layout/Layout'
+import RoleRoute from './components/auth/RoleRoute'
+import { getDefaultRoute } from './lib/roles'
 import LoginPage from './pages/LoginPage'
 import DashboardPage from './pages/DashboardPage'
 import ProductsPage from './pages/ProductsPage'
@@ -30,14 +32,27 @@ function App() {
           path="/"
           element={auth.token ? <Layout /> : <Navigate to="/login" />}
         >
-          <Route index element={<Navigate to="/dashboard" />} />
-          <Route path="dashboard" element={<DashboardPage />} />
-          <Route path="products" element={<ProductsPage />} />
-          <Route path="transactions" element={<TransactionsPage />} />
-          <Route path="forecast" element={<ForecastPage />} />
-          <Route path="query" element={<QueryPage />} />
-          <Route path="users" element={<UsersPage />} />
-          <Route path="orders" element={<OrderPage />} />
+          <Route index element={<Navigate to={getDefaultRoute(auth.role)} replace />} />
+
+          <Route element={<RoleRoute allowedRoles={['Admin', 'Manager']} />}>
+            <Route path="dashboard" element={<DashboardPage />} />
+            <Route path="transactions" element={<TransactionsPage />} />
+            <Route path="forecast" element={<ForecastPage />} />
+            <Route path="query" element={<QueryPage />} />
+          </Route>
+
+          <Route element={<RoleRoute allowedRoles={['Admin']} />}>
+            <Route path="users" element={<UsersPage />} />
+          </Route>
+
+          <Route element={<RoleRoute allowedRoles={['Cashier']} />}>
+            <Route path="orders" element={<OrderPage />} />
+          </Route>
+
+          {/* Products page: GET is allowed for all three roles on the backend */}
+          <Route element={<RoleRoute allowedRoles={['Admin', 'Manager', 'Cashier']} />}>
+            <Route path="products" element={<ProductsPage />} />
+          </Route>
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

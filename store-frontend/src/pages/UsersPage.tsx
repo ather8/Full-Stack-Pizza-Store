@@ -48,18 +48,18 @@ export default function UsersPage() {
         }
     }
 
-    if (loading) return <div className="p-8 text-gray-500">Loading...</div>
+    if (loading) return <div className="p-4 md:p-8 text-gray-500">Loading...</div>
 
     return (
-        <div className="p-8">
-            <div className="flex items-center justify-between mb-6">
+        <div className="p-4 md:p-8">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-800">Users</h1>
                     <p className="text-gray-500 text-sm mt-1">Manage staff accounts and permissions</p>
                 </div>
                 <button
                     onClick={() => setShowModal(true)}
-                    className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors"
+                    className="flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors"
                 >
                     <Plus size={16} />
                     Add User
@@ -68,7 +68,8 @@ export default function UsersPage() {
 
             {/* Table */}
             <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-                <table className="w-full">
+                <div className="overflow-x-auto">
+                <table className="w-full min-w-[560px]">
                     <thead>
                         <tr className="border-b border-gray-100">
                             <th className="text-left text-xs font-medium text-gray-400 px-6 py-4">Name</th>
@@ -105,6 +106,7 @@ export default function UsersPage() {
                         ))}
                     </tbody>
                 </table>
+                </div>
             </div>
 
             {/* Modal */}

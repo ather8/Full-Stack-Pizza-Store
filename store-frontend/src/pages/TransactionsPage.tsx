@@ -28,18 +28,18 @@ export default function TransactionsPage() {
         }), [transactions, search, dateFilter]
     )
 
-    if (loading) return <div className="p-8 text-gray-500">Loading...</div>
+    if (loading) return <div className="p-4 md:p-8 text-gray-500">Loading...</div>
 
     return (
-        <div className="p-8">
-            <div className="flex items-center justify-between mb-6">
+        <div className="p-4 md:p-8">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-800">Transactions</h1>
                     <p className="text-gray-500 text-sm mt-1">Review past orders and receipts</p>
                 </div>
                 <button
                     onClick={() => navigate('/orders')}
-                    className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors"
+                    className="flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors"
                 >
                     <PlusCircle size={16} />
                     New Order
@@ -47,7 +47,7 @@ export default function TransactionsPage() {
             </div>
 
             {/* Filters */}
-            <div className="flex gap-3 mb-6">
+            <div className="flex flex-col sm:flex-row gap-3 mb-6">
                 <div className="relative flex-1">
                     <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                     <input
@@ -71,7 +71,8 @@ export default function TransactionsPage() {
 
             {/* Table */}
             <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-                <table className="w-full">
+                <div className="overflow-x-auto">
+                <table className="w-full min-w-[720px]">
                     <thead>
                         <tr className="border-b border-gray-100">
                             <th className="text-left text-xs font-medium text-gray-400 px-6 py-4">ID</th>
@@ -99,6 +100,7 @@ export default function TransactionsPage() {
                         ))}
                     </tbody>
                 </table>
+                </div>
 
                 {filtered.length === 0 && (
                     <div className="text-center py-12 text-gray-400">

@@ -26,3 +26,28 @@ export async function createTransaction(productId: number, quantity: number): Pr
     }
     return response.json()
 }
+
+export interface CartLine {
+    product_id: number
+    quantity: number
+}
+
+// Commits an entire cart as one all-or-nothing request — either every line
+// is recorded as a sale, or none are. Prevents the previous per-line-POST
+// loop from partially committing a cart when a later line fails.
+export async function createTransactionsBulk(items: CartLine[]): Promise<Transaction[]> {
+    const token = localStorage.getItem('token')
+    const response = await fetch(`${BASE_URL}/transactions/bulk`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ items })
+    })
+    if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.detail || 'Failed to complete order')
+    }
+    return response.json()
+}

@@ -16,3 +16,23 @@ llm_engine = create_engine(LLM_DATABASE_URL)
 LLMSessionLocal = sessionmaker(bind=llm_engine)
 
 Base = declarative_base()
+
+
+# Shared DB session dependencies — single source of truth.
+# Previously main.py and auth.py each defined their own copy of get_db;
+# routers import from here instead so there's only one definition to keep
+# in sync.
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+def get_llm_db():
+    db = LLMSessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { login as loginApi } from '../api/auth'
 import { useAuth } from '../context/AuthContext'
+import { getDefaultRoute } from '../lib/roles'
 
 export default function LoginPage() {
     const [email, setEmail] = useState('')
@@ -17,8 +18,8 @@ export default function LoginPage() {
         setError('')
         try {
             const response = await loginApi(email, password)
-            await login(response.access_token)
-            navigate('/dashboard')
+            const role = await login(response.access_token)
+            navigate(getDefaultRoute(role))
         } catch (err: unknown) {
             if (err instanceof Error) setError(err.message)
         } finally {

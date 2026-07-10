@@ -28,10 +28,10 @@ export default function ProductsPage() {
         'Drinks': 'bg-purple-100 text-purple-700',
     }
 
-    if (loading) return <div className="p-8 text-gray-500">Loading...</div>
+    if (loading) return <div className="p-4 md:p-8 text-gray-500">Loading...</div>
 
     return (
-        <div className="p-8">
+        <div className="p-4 md:p-8">
             <div className="flex items-center justify-between mb-6">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-800">Products</h1>
@@ -53,7 +53,8 @@ export default function ProductsPage() {
 
             {/* Table */}
             <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-                <table className="w-full">
+                <div className="overflow-x-auto">
+                <table className="w-full min-w-[560px]">
                     <thead>
                         <tr className="border-b border-gray-100">
                             <th className="text-left text-xs font-medium text-gray-400 px-6 py-4">Product</th>
@@ -103,6 +104,7 @@ export default function ProductsPage() {
                         ))}
                     </tbody>
                 </table>
+                </div>
 
                 {filtered.length === 0 && (
                     <div className="text-center py-12 text-gray-400">
