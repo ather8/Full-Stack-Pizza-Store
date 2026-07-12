@@ -4,7 +4,7 @@ A production-style restaurant management platform built with FastAPI, React, Pos
 
 ## Live Demo
 
-- **Frontend:** https://pizza-store-frontend-iota.vercel.app
+- **Frontend:** https://pizza-store-frontend-ruby.vercel.app/
 - **Backend API:** https://pizza-store-production.up.railway.app/docs
 
 **Demo credentials:**
