@@ -3,6 +3,7 @@ import { useAuth } from './context/AuthContext'
 import Layout from './components/layout/Layout'
 import RoleRoute from './components/auth/RoleRoute'
 import { getDefaultRoute } from './lib/roles'
+import LandingPage from './pages/LandingPage'
 import LoginPage from './pages/LoginPage'
 import DashboardPage from './pages/DashboardPage'
 import ProductsPage from './pages/ProductsPage'
@@ -11,7 +12,6 @@ import ForecastPage from './pages/ForecastPage'
 import QueryPage from './pages/QueryPage'
 import UsersPage from './pages/UsersPage'
 import OrderPage from './pages/OrderPage'
-
 
 function App() {
   const { auth, authLoading } = useAuth()
@@ -27,9 +27,13 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Public */}
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
+
+        {/* Protected app, now under /app */}
         <Route
-          path="/"
+          path="/app"
           element={auth.token ? <Layout /> : <Navigate to="/login" />}
         >
           <Route index element={<Navigate to={getDefaultRoute(auth.role)} replace />} />
@@ -49,11 +53,11 @@ function App() {
             <Route path="orders" element={<OrderPage />} />
           </Route>
 
-          {/* Products page: GET is allowed for all three roles on the backend */}
           <Route element={<RoleRoute allowedRoles={['Admin', 'Manager', 'Cashier']} />}>
             <Route path="products" element={<ProductsPage />} />
           </Route>
         </Route>
+
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>

@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom'
 import { ROUTE_ROLES, type Role } from '../../lib/roles'
 
 const navItems = [
-  { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+  { to: '/app/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { to: '/orders', icon: PlusCircle, label: 'New Order' },
   { to: '/products', icon: Package, label: 'Products' },
   { to: '/transactions', icon: Receipt, label: 'Transactions' },
