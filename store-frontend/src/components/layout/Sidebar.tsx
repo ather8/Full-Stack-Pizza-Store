@@ -16,12 +16,12 @@ import { ROUTE_ROLES, type Role } from '../../lib/roles'
 
 const navItems = [
   { to: '/app/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/orders', icon: PlusCircle, label: 'New Order' },
-  { to: '/products', icon: Package, label: 'Products' },
-  { to: '/transactions', icon: Receipt, label: 'Transactions' },
-  { to: '/forecast', icon: TrendingUp, label: 'Forecast' },
-  { to: '/query', icon: MessageSquare, label: 'AI Query' },
-  { to: '/users', icon: Users, label: 'Users' },
+  { to: '/app/orders', icon: PlusCircle, label: 'New Order' },
+  { to: '/app/products', icon: Package, label: 'Products' },
+  { to: '/app/transactions', icon: Receipt, label: 'Transactions' },
+  { to: '/app/forecast', icon: TrendingUp, label: 'Forecast' },
+  { to: '/app/query', icon: MessageSquare, label: 'AI Query' },
+  { to: '/app/users', icon: Users, label: 'Users' },
 ]
 
 interface SidebarProps {

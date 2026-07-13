@@ -69,7 +69,7 @@ export default function LandingPage() {
                             Staff Login <ArrowRight size={16} />
                         </Link>
                         <a
-                            href="https://github.com/ather8/pizza-store"
+                            href="https://github.com/ather8/Full-Stack-Pizza-Store"
                             target="_blank"
                             rel="noreferrer"
                             className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 px-5 py-3 rounded-xl text-sm font-medium transition-colors"

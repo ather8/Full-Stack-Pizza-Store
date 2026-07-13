@@ -19,7 +19,7 @@ export default function LoginPage() {
         try {
             const response = await loginApi(email, password)
             const role = await login(response.access_token)
-            navigate(`/app${getDefaultRoute(role)}`)
+            navigate(getDefaultRoute(role))
         } catch (err: unknown) {
             if (err instanceof Error) setError(err.message)
         } finally {
